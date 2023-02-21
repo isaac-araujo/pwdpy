@@ -1,4 +1,4 @@
-# password-library 
+# passwordtool
 is a tool for generating random passwords. It underlying python module.
 
 # TODO
