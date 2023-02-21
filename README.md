@@ -1,5 +1,5 @@
-# passwordtool
-is a tool for generating random passwords. It underlying python module.
+# pwdpy
+pwdpy is a tool for generating random passwords. It underlying python module.
 
 # TODO
 password strengthener:
