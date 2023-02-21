@@ -1,8 +1,8 @@
 from setuptools import setup, find_packages
 
-VERSION = '0.1'
-DESCRIPTION = 'Password Tools'
-LONG_DESCRIPTION = 'A package that allows to generate simple to complex passwords'
+VERSION = "0.1.1"
+DESCRIPTION = "Password Tools"
+LONG_DESCRIPTION = "A package that allows to generate simple to complex passwords"
 
 # Setting up
 setup(
@@ -14,8 +14,8 @@ setup(
     long_description_content_type="text/markdown",
     long_description=LONG_DESCRIPTION,
     packages=find_packages(),
-    install_requires=['random'],
-    keywords=['python', 'password', 'password generator', 'password tools'],
+    install_requires=[],
+    keywords=["python", "password", "password generator", "password tools"],
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",
         "Intended Audience :: Developers",
@@ -23,5 +23,5 @@ setup(
         "Operating System :: Unix",
         "Operating System :: MacOS :: MacOS X",
         "Operating System :: Microsoft :: Windows",
-    ]
+    ],
 )
