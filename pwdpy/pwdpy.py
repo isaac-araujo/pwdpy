@@ -29,7 +29,7 @@ class Password:
     def add_charset(self, charset):
         self.charsets.append(charset)
 
-    def generate(self):
+    def generate_password(self):
         password = []
         for _ in range(self.length):
             password.append(self.__generate_char())
@@ -81,12 +81,12 @@ def generate(
     """
 
     if quantity < 1:
-        raise ValueError("Quantity must be greater than zero")
+        raise ValueError("quantity must be greater than zero")
     if length < 1:
-        raise ValueError("Length must be greater than zero")
+        raise ValueError("length must be greater than zero")
     if not punctuation and not digits and not letters:
         raise ValueError(
-            "At least one that argument must be True (punctuation, digits, letters)"
+            "at least one of this argument must be True (punctuation, digits, letters)"
         )
 
     password_gen = Password(length)
@@ -109,5 +109,91 @@ def generate(
             password_list.append(password_gen.generate_password())
         return password_list
 
-    password = password_gen.generate()
-    return password
+    return password_gen.generate_password()
+
+
+def __show_error(msg=""):
+    print(f"pwdpy error: {msg}", file=sys.stderr)
+
+
+if __name__ == "__main__":
+    import argparse
+    import sys
+
+    parser = argparse.ArgumentParser(description="Tools for passwords")
+
+    parser.add_argument(
+        "-l",
+        "--length",
+        help="the length of the password (default: 8)",
+        type=int,
+        default=8,
+    )
+
+    parser.add_argument(
+        "-q",
+        "--quantity",
+        help="quantity of passwords to generate (default: 1)",
+        type=int,
+        default=1,
+    )
+
+    parser.add_argument(
+        "-p",
+        "--punctuation",
+        help="use punctuation characters (default: False)",
+        action="store_true",
+        default=False,
+    )
+
+    parser.add_argument(
+        "-d",
+        "--digits",
+        help="use digits (default: False)",
+        action="store_true",
+        default=False,
+    )
+
+    parser.add_argument(
+        "-le",
+        "--letters",
+        help="use letter (default: False)",
+        action="store_true",
+        default=False,
+    )
+
+    parser.add_argument(
+        "-nu",
+        "--no-upper",
+        help="don't use upper case letters (default: False)",
+        action="store_false",
+        default=True,
+        dest="upper",
+    )
+
+    parser.add_argument(
+        "-nl",
+        "--no-lower",
+        help="don't use lower case letters (default: False)",
+        action="store_false",
+        default=True,
+        dest="lower",
+    )
+
+    args = parser.parse_args()
+
+    try:
+        print(
+            generate(
+                args.quantity,
+                length=args.length,
+                punctuation=args.punctuation,
+                digits=args.digits,
+                letters=args.letters,
+                l_upper=args.upper,
+                l_lower=args.lower,
+                charset="",
+            )
+        )
+    except Exception as error_msg:
+        __show_error(error_msg.args[0])
