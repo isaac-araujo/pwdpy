@@ -123,71 +123,10 @@ def __show_error(msg=""):
 
 
 if __name__ == "__main__":
-    import argparse
     import sys
+    import cli_args
 
-    parser = argparse.ArgumentParser(description="Tools for passwords")
-
-    parser.add_argument(
-        "-l",
-        "--length",
-        help="the length of the password (default: 8)",
-        type=int,
-        default=8,
-    )
-
-    parser.add_argument(
-        "-q",
-        "--quantity",
-        help="quantity of passwords to generate (default: 1)",
-        type=int,
-        default=1,
-    )
-
-    parser.add_argument(
-        "-p",
-        "--punctuation",
-        help="use punctuation characters (default: False)",
-        action="store_true",
-        default=False,
-    )
-
-    parser.add_argument(
-        "-d",
-        "--digits",
-        help="use digits (default: False)",
-        action="store_true",
-        default=False,
-    )
-
-    parser.add_argument(
-        "-le",
-        "--letters",
-        help="use letter (default: False)",
-        action="store_true",
-        default=False,
-    )
-
-    parser.add_argument(
-        "-nu",
-        "--no-upper",
-        help="don't use upper case letters (default: False)",
-        action="store_false",
-        default=True,
-        dest="upper",
-    )
-
-    parser.add_argument(
-        "-nl",
-        "--no-lower",
-        help="don't use lower case letters (default: False)",
-        action="store_false",
-        default=True,
-        dest="lower",
-    )
-
-    args = parser.parse_args()
-
+    args = cli_args.get_args()
     try:
         print(
             generate(
@@ -202,4 +141,4 @@ if __name__ == "__main__":
             )
         )
     except Exception as error_msg:
-        __show_error(error_msg.args[0])
+        __show_error(error_msg.args[-1])
