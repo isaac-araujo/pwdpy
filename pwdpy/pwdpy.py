@@ -9,6 +9,7 @@ class Charset:
         self.min = min
         self.count = 0
         self._min_ok = False
+        self.timeout = False
         # self._max_ok = False
 
     # @property
@@ -25,6 +26,7 @@ class Password:
         self.length = length
         self.charsets = []
         self.minimum_achieved = False
+        self.password = []
 
     def add_charset(self, charset):
         self.charsets.append(charset)
@@ -32,15 +34,16 @@ class Password:
     def reset_charset(self):
         for charset in self.charsets:
             charset.count = 0
+            charset.timeout = False
 
     def generate_password(self):
-        password = []
+        self.password = []
         for _ in range(self.length):
-            password.append(self.__generate_char())
-        random.shuffle(password)
-        
+            self.password.append(self.__generate_char())
+        random.shuffle(self.password)
+
         self.reset_charset()
-        return "".join(password)
+        return "".join(self.password)
 
     def __generate_char(self):
         if not self.minimum_achieved:
@@ -51,10 +54,21 @@ class Password:
 
             charset = random.choice(pool)
             charset.count += 1
-        else:
-            charset = random.choice(self.charsets)
 
-        return random.choice(charset.charset)
+        elif len(self.charsets) > 1:
+            # guarantees that will not select the same charset twice in a roll
+            pool = [cs for cs in self.charsets if not cs.timeout]
+            charset = random.choice(pool)
+            self.reset_charset()
+            charset.timeout = True
+
+        else:
+            charset = self.charsets[0]
+
+        if (char := random.choice(charset.charset)) in self.password:
+            # choice again if char alredy in the password 
+            char = random.choice(charset.charset)
+        return char
 
 
 def generate(
@@ -65,7 +79,8 @@ def generate(
     letters=True,
     l_upper=True,
     l_lower=True,
-    charset="",
+    charsets=[],
+    charset_file="",
     **kwargs,
 ) -> (str | list):
     """Generates a random password based on the arguments.
@@ -79,7 +94,8 @@ def generate(
         letters (bool, optional): Whether to use letters or not. Defaults to True.
         l_upper (bool, optional): Whether to use uppercase letters or not. Defaults to True.
         l_lower (bool, optional): Whether to use lowercase letters or not. Defaults to True.
-        charset (str, optional): The charset will be used instead of the arguments specification. Defaults to "".
+        charsets (list, optional): The charsets that will be used instead of the arguments specification. Defaults to [].
+        charset_file (str, optional): The charset file will be used instead of the arguments specification. Defaults to "".
 
     Returns:
         str | list: return a list if the quantity is greater than 1
@@ -90,15 +106,30 @@ def generate(
         raise ValueError("quantity must be greater than zero")
     if length < 1:
         raise ValueError("length must be greater than zero")
-    if not punctuation and not digits and not letters:
+    if (
+        not punctuation
+        and not digits
+        and not letters
+        and not charsets
+        and not charset_file
+    ):
         raise ValueError(
-            "at least one of this argument must be True (punctuation, digits, letters)"
+            "at least one of this argument must exists(punctuation, digits, letters, charset, charset_file)"
         )
+    if not isinstance(charsets, list):
+        raise ValueError("charset must be a list")
 
+    encoding = kwargs.get("encoding", "utf-8")
     password_gen = Password(length)
 
-    if charset:
-        password_gen.add_charset(Charset(charset, length))
+    if charsets:
+        for cs in charsets:
+            password_gen.add_charset(Charset(cs, length))
+
+    elif charset_file:
+        with open(charset_file, encoding=encoding) as file:
+            password_gen.add_charset(Charset(file.read(), length))
+
     else:
         if punctuation:
             password_gen.add_charset(Charset(string.punctuation, length))
@@ -137,7 +168,7 @@ if __name__ == "__main__":
                 letters=args.letters,
                 l_upper=args.upper,
                 l_lower=args.lower,
-                charset="",
+                charset_file=args.charset_file,
             )
         )
     except Exception as error_msg:
