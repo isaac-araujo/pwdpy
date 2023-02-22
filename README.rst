@@ -1,134 +1,108 @@
-passgen
+pwdpy
 =======
 
-passgen is a tool for generating random passwords. It provides both
-command line utility and underlying python module.
+pwd is a set of tools to facilitate password handling. It can be used in command line and as a python module.
 
 Installation
 ============
 
-passgen requires Python 2.7 or 3.x.
+pwdpy requires Python 3.x.
 
-passgen can be installed with `pip`::
+pwdpy can be installed with *pip*::
 
-    $ pip install passgen
+    $ pip install pwdpy
 
 To install it from source, enter the source distribution directory and run::
 
     $ python setup.py install
 
-To install in development mode, run from project directory::
-
-    $ pip install --user -e .
-
 Usage (command line)
 ====================
 
-The most basic usage of passgen command line utility prints 10 random
+The most basic usage of pwdpy command line utility prints 10 random
 passwords, and is as follows::
 
-    $ passgen
+    $ pwdpy
 
-passgen accepts several arguments configuring its outcome.
+pwdpy accepts several arguments configuring its outcome.
 Overall synopsis is::
 
-    $ passgen [-h] [-l LENGTH] [-n NUMBER]
-              [-p] [--limit-punctuation LIMIT_PUNCTUATION]
-              [--no-digits | --no-letters]
-              [--upper | --lower]
+    $ pwdpy [-h] [-l LENGTH] [-q QUANTITY]
+            [-p] [-d] [-le] [-nu] [-nl]
 
 Arguments:
 
--h
-    Display help
+-h --help
+    Display help message
 
 -l, --length LENGTH
-    Passwords should contain LENGTH characters. Defaults to 12.
+    The length of the password (default: 8)
 
--n, --number NUMBER
-    Generate NUMBER passwords. Defaults to 10.
+-q, --quantity QUANTITY
+    Generate NUMBER passwords. (default: 1)
 
 -p, --punctuation
-    Use punctuation characters
+    Use punctuation characters (default: False)
 
---limit-punctuation LIMIT_PUNCTUATION
-    Specify allowed punctuation characters
+-d --digits
+    Use digits (default: False)
 
---no-digits
-    Don't use digits
+-le --letters
+    Use letter (default: False)
 
---no-letters
-    Don't use letters
+-nu --no-upper
+    Don't use upper case letters (default: False)
 
---upper
-    Use only upper case letters
-
---lower
-    Use only lower case letters
+-nl --no-lower
+    Don't use lower case letters (default: False)
 
 Examples
 --------
 
-Below are some examples of passgen usage.
+Below are some examples of pwdpy usage.
 
-Output one password::
+Output: one password with letters and digits::
 
-    $ passgen -n 1
-    faFMKqApw24P
+    $ pwdpy -le -d 
+    MT06aRK1
 
-Generate one password with eight characters::
+Output one password with 12 digits::
 
-    $ passgen -n 1 -l 8
-    h2MowzBQ
+    $ pwdpy -l 12 -d
+    304751766483
 
-Generate one password with all upper case letters::
+Output one password with all characters possibility::
 
-    $ passgen -n 1 --upper
-    3TLJ73WQSG6U
+    $ pwdpy -le -d -p
+    PY>8OH+y
 
-Generate one password with punctuation characters::
+Output: a list containing 3 passwords with all characters possibility::
 
-    $ passgen -n 1 -p
-    oFmCF|s8kCE~
+    $ pwdpy -q 3 -le -d -p
+    ['Xw]6ua77', 'SfmCrlg)', 'I9):o8Oa']
 
 Python module
 =============
 
-passgen Python module provides just one function also called passgen.
+pwdpy Python module provides just one function also called generate.
 
-| ``passgen(length=12, punctuation=False, digits=True, letters=True,
-            case='both')``
+| ``def generate(
+    quantity=1,
+    length=8,
+    punctuation=True,
+    digits=True,
+    letters=True,
+    l_upper=True,
+    l_lower=True,
+    charset="",
+    **kwargs
+) -> (str | list):``
 
-It returns a random string with *length* characters. *punctuation*, *digits*
+It returns a string with *length* characters. *punctuation*, *digits*
 and *letters* arguments specify whether punctuation, digits and letters
-should be used. *case* specifies letter case and can be one of 'upper',
-'lower' or 'both'.
+should be used. *l_upper* and *l_lower* specifies letter wich case the letter can be.
 
-For more details, run::
-
-    $ python -c 'import passgen; help(passgen.passgen)'
-
-Testing
-=======
-
-The passgen tests are done using ``unittest``. For running the tests, run from
-project directory::
-
-    $ python tests/test_passgen.py -v
-
-TODO
-====
-
-- Implement generation from format string.
-  For example, 'ddd' generating three-digit password.
-
-- Allow occurance restrictions on punctuation, digits and letters.
-  For example, ``passgen(min-punctuation=1)`` returning password with at least
-  one punctuation.
-
-- Add the ability to exclude visually similar characters from the result.
 
 License
-=======
-
-See LICENSE.
+--------
+MIT
