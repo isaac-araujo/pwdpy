@@ -57,34 +57,34 @@ Below are some examples of pwdpy usage.
 One password with letters and digits:
 
     $ pwdpy -le -d 
-    $ MT06aRK1
+        MT06aRK1
 
 One password with 12 digits:
 
     $ pwdpy -l 12 -d
-    $ 304751766483
+        304751766483
 
 One password with all characters possibility:
 
     $ pwdpy -le -d -p
-    $ PY>8OH+y
+        PY>8OH+y
 
 A list containing 3 passwords with all characters possibility:
 
     $ pwdpy -q 3 -le -d -p
-    $ ['Xw]6ua77', 'SfmCrlg)', 'I9):o8Oa']
+        ['Xw]6ua77', 'SfmCrlg)', 'I9):o8Oa']
 
 One password with all characters possibility from the charset file:
 
     $ pwdpy -cf ./wordlist.txt
-    $ }=W8jb4y
+        }=W8jb4y
 
 Python module
 =============
 
 pwdpy Python module provides one function that is called generate.
 
-| ``def generate( quantity=1, length=8, punctuation=True, digits=True, letters=True, l_upper=True, l_lower=True, charset=[], charset_file="", **kwargs )``
+| ``def generate(quantity=1, length=8, punctuation=True, digits=True, letters=True, l_upper=True, l_lower=True, charset=[], charset_file="", **kwargs)``
 
 It returns a string with *length* characters. *punctuation*, *digits*
 and *letters* arguments specify whether punctuation, digits and letters
@@ -93,4 +93,4 @@ should be used. *l_upper* and *l_lower* specifies letter wich case the letter ca
 
 License
 --------
-MIT
+MIT License
