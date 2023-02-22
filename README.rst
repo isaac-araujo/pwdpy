@@ -32,28 +32,28 @@ Overall synopsis is::
 
 Arguments:
 
--h --help
+-h, --help
     Display help message
 
 -l, --length LENGTH
     The length of the password (default: 8)
 
 -q, --quantity QUANTITY
-    Generate NUMBER passwords. (default: 1)
+    Generate QUANTITY passwords. (default: 1)
 
 -p, --punctuation
     Use punctuation characters (default: False)
 
--d --digits
+-d, --digits
     Use digits (default: False)
 
--le --letters
+-le, --letters
     Use letter (default: False)
 
--nu --no-upper
+-nu, --no-upper
     Don't use upper case letters (default: False)
 
--nl --no-lower
+-nl, --no-lower
     Don't use lower case letters (default: False)
 
 Examples
@@ -84,19 +84,9 @@ Output: a list containing 3 passwords with all characters possibility::
 Python module
 =============
 
-pwdpy Python module provides just one function also called generate.
+pwdpy Python module provides one function that is called generate.
 
-| ``def generate(
-    quantity=1,
-    length=8,
-    punctuation=True,
-    digits=True,
-    letters=True,
-    l_upper=True,
-    l_lower=True,
-    charset="",
-    **kwargs
-) -> (str | list):``
+| ``def generate( quantity=1, length=8, punctuation=True, digits=True, letters=True, l_upper=True, l_lower=True, charset="", **kwargs ):``
 
 It returns a string with *length* characters. *punctuation*, *digits*
 and *letters* arguments specify whether punctuation, digits and letters
