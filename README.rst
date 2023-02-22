@@ -18,8 +18,7 @@ Usage (command line)
 pwdpy accepts several arguments configuring its outcome.
 Overall synopsis is:
 
-    $ pwdpy [-h] [-l LENGTH] [-q QUANTITY]
-            [-p] [-d] [-le] [-nu] [-nl] [-cf]
+    $ pwdpy [-h] [-l LENGTH] [-q QUANTITY] [-p] [-d] [-le] [-nu] [-nl] [-cf]
 
 Arguments:
 
@@ -47,7 +46,7 @@ Arguments:
 -nl, --no-lower
     Don't use lower case letters (default: False)
 
--cf, --charset-file
+-cf, --charset-file FILE
     Charset file will be used instead of the arguments specification
 
 Examples
