@@ -12,23 +12,14 @@ pwdpy can be installed with *pip*:
 
     $ pip install pwdpy
 
-To install it from source, enter the source distribution directory and run:
-
-    $ python setup.py install
-
 Usage (command line)
 ====================
-
-The most basic usage of pwdpy command line utility prints 10 random
-passwords, and is as follows:
-
-    $ pwdpy
 
 pwdpy accepts several arguments configuring its outcome.
 Overall synopsis is:
 
     $ pwdpy [-h] [-l LENGTH] [-q QUANTITY]
-            [-p] [-d] [-le] [-nu] [-nl]
+            [-p] [-d] [-le] [-nu] [-nl] [-cf]
 
 Arguments:
 
@@ -56,6 +47,9 @@ Arguments:
 -nl, --no-lower
     Don't use lower case letters (default: False)
 
+-cf, --charset-file
+    Charset file will be used instead of the arguments specification
+
 Examples
 --------
 
@@ -81,12 +75,17 @@ Output: a list containing 3 passwords with all characters possibility:
     $ pwdpy -q 3 -le -d -p
     ['Xw]6ua77', 'SfmCrlg)', 'I9):o8Oa']
 
+Output: one password with all characters possibility from the charset file:
+
+    $ pwdpy -cf ./wordlist.txt
+    }=W8jb4y
+
 Python module
 =============
 
 pwdpy Python module provides one function that is called generate.
 
-| ``def generate( quantity=1, length=8, punctuation=True, digits=True, letters=True, l_upper=True, l_lower=True, charset="", **kwargs )``
+| ``def generate( quantity=1, length=8, punctuation=True, digits=True, letters=True, l_upper=True, l_lower=True, charset=[], charset_file="", **kwargs )``
 
 It returns a string with *length* characters. *punctuation*, *digits*
 and *letters* arguments specify whether punctuation, digits and letters
