@@ -1,8 +1,10 @@
 from setuptools import setup, find_packages
 
-VERSION = "0.2.0"
+VERSION = "0.2.1"
 DESCRIPTION = "Password Tools"
-LONG_DESCRIPTION = "pwdpy is a set of tools to facilitate password handling."
+
+with open('README.rst') as file:
+    long_description = file.read()
 
 # Setting up
 setup(
@@ -12,7 +14,7 @@ setup(
     author_email="<zac.araujo2001@gmail.com>",
     description=DESCRIPTION,
     long_description_content_type="text/markdown",
-    long_description=LONG_DESCRIPTION,
+    long_description=long_description,
     packages=find_packages(),
     install_requires=[],
     keywords=["python", "password", "password generator", "password tools"],
