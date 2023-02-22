@@ -1,7 +1,7 @@
 pwdpy
 =======
 
-pwd is a set of tools to facilitate password handling. It can be used in command line and as a python module.
+pwdpy is a set of tools to facilitate password handling. It can be used in command line and as a python module.
 
 Installation
 ============
