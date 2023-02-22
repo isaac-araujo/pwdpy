@@ -1,15 +1,15 @@
 from setuptools import setup, find_packages
 
-VERSION = "0.1.1"
+VERSION = "0.2.0"
 DESCRIPTION = "Password Tools"
-LONG_DESCRIPTION = "A package that allows to generate simple to complex passwords"
+LONG_DESCRIPTION = "pwdpy is a set of tools to facilitate password handling."
 
 # Setting up
 setup(
     name="pwdpy",
     version=VERSION,
     author="Isaac Araujo",
-    author_email="<mail@gmail.com>",
+    author_email="<zac.araujo2001@gmail.com>",
     description=DESCRIPTION,
     long_description_content_type="text/markdown",
     long_description=LONG_DESCRIPTION,
