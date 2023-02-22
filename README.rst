@@ -54,30 +54,30 @@ Examples
 
 Below are some examples of pwdpy usage.
 
-Output: one password with letters and digits:
+One password with letters and digits:
 
     $ pwdpy -le -d 
-    MT06aRK1
+    $ MT06aRK1
 
-Output one password with 12 digits:
+One password with 12 digits:
 
     $ pwdpy -l 12 -d
-    304751766483
+    $ 304751766483
 
-Output one password with all characters possibility:
+One password with all characters possibility:
 
     $ pwdpy -le -d -p
-    PY>8OH+y
+    $ PY>8OH+y
 
-Output: a list containing 3 passwords with all characters possibility:
+A list containing 3 passwords with all characters possibility:
 
     $ pwdpy -q 3 -le -d -p
-    ['Xw]6ua77', 'SfmCrlg)', 'I9):o8Oa']
+    $ ['Xw]6ua77', 'SfmCrlg)', 'I9):o8Oa']
 
-Output: one password with all characters possibility from the charset file:
+One password with all characters possibility from the charset file:
 
     $ pwdpy -cf ./wordlist.txt
-    }=W8jb4y
+    $ }=W8jb4y
 
 Python module
 =============
