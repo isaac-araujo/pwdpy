@@ -29,11 +29,17 @@ class Password:
     def add_charset(self, charset):
         self.charsets.append(charset)
 
+    def reset_charset(self):
+        for charset in self.charsets:
+            charset.count = 0
+
     def generate_password(self):
         password = []
         for _ in range(self.length):
             password.append(self.__generate_char())
         random.shuffle(password)
+        
+        self.reset_charset()
         return "".join(password)
 
     def __generate_char(self):
@@ -60,7 +66,7 @@ def generate(
     l_upper=True,
     l_lower=True,
     charset="",
-    **kwargs
+    **kwargs,
 ) -> (str | list):
     """Generates a random password based on the arguments.
 
