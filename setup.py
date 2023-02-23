@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-VERSION = "0.2.4"
+VERSION = "0.2.5"
 DESCRIPTION = "Password Tools"
 
 with open("README.rst") as file:
@@ -19,6 +19,8 @@ setup(
     license="MIT License",
     packages=find_packages(),
     install_requires=[],
+    entry_points={"console_scripts": ["pwdpy = pwdpy.pwdpy:main"]},
+    py_modules=["pwdpy"],
     keywords=["python", "password", "password generator", "password tools"],
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",

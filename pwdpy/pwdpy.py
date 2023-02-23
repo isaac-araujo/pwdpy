@@ -1,3 +1,4 @@
+import sys
 import string
 import secrets
 
@@ -153,12 +154,7 @@ def test(password: str) -> str:
     ...
 
 
-def __show_error(msg=""):
-    print(f"pwdpy error: {msg}", file=sys.stderr)
-
-
-if __name__ == "__main__":
-    import sys
+def main():
     from . import cli_args
 
     args = cli_args.get_args()
@@ -181,3 +177,11 @@ if __name__ == "__main__":
 
     except Exception as error_msg:
         __show_error(error_msg.args[-1])
+
+
+def __show_error(msg=""):
+    print(f"pwdpy error: {msg}", file=sys.stderr)
+
+
+if __name__ == "__main__":
+    main()
