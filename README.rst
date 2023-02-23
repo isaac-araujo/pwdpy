@@ -18,7 +18,7 @@ Usage (command line)
 pwdpy accepts several arguments configuring its outcome.
 Overall synopsis is:
 
-    $ pwdpy [-h] [-l LENGTH] [-q QUANTITY] [-p] [-d] [-le] [-nu] [-nl] [-cf FILE]
+    $ pwdpy {generate, test} [-h] [-l LENGTH] [-q QUANTITY] [-p] [-d] [-le] [-nu] [-nl] [-cf FILE]
 
 Arguments:
 
@@ -56,27 +56,27 @@ Below are some examples of pwdpy usage.
 
 One password with letters and digits:
 
-    $ pwdpy -le -d 
+    $ pwdpy generate -le -d 
         MT06aRK1
 
 One password with 12 digits:
 
-    $ pwdpy -l 12 -d
+    $ pwdpy generate -l 12 -d
         304751766483
 
 One password with all characters possibility:
 
-    $ pwdpy -le -d -p
+    $ pwdpy generate -le -d -p
         PY>8OH+y
 
 A list containing 3 passwords with all characters possibility:
 
-    $ pwdpy -q 3 -le -d -p
+    $ pwdpy generate -q 3 -le -d -p
         ['Xw]6ua77', 'SfmCrlg)', 'I9):o8Oa']
 
 One password with all characters possibility from the charset file:
 
-    $ pwdpy -cf ./wordlist.txt
+    $ pwdpy generate -cf ./wordlist.txt
         }=W8jb4y
 
 Python module
