@@ -132,5 +132,4 @@ dmypy.json
 .vscode/
 
 # Test files
-test.py
-test.txt
+tests/

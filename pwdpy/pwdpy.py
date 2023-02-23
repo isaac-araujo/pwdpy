@@ -66,7 +66,7 @@ class Password:
             charset = self.charsets[0]
 
         if (char := random.choice(charset.charset)) in self.password:
-            # choice again if char alredy in the password 
+            # choice again if char alredy in the password
             char = random.choice(charset.charset)
         return char
 
@@ -149,6 +149,10 @@ def generate(
     return password_gen.generate_password()
 
 
+def test(password: str) -> str:
+    ...
+
+
 def __show_error(msg=""):
     print(f"pwdpy error: {msg}", file=sys.stderr)
 
@@ -159,17 +163,21 @@ if __name__ == "__main__":
 
     args = cli_args.get_args()
     try:
-        print(
-            generate(
-                args.quantity,
-                length=args.length,
-                punctuation=args.punctuation,
-                digits=args.digits,
-                letters=args.letters,
-                l_upper=args.upper,
-                l_lower=args.lower,
-                charset_file=args.charset_file,
+        if args.command in cli_args.GENERATE:
+            print(
+                generate(
+                    args.quantity,
+                    length=args.length,
+                    punctuation=args.punctuation,
+                    digits=args.digits,
+                    letters=args.letters,
+                    l_upper=args.upper,
+                    l_lower=args.lower,
+                    charset_file=args.charset_file,
+                )
             )
-        )
+        elif args.command in cli_args.TEST:
+            print(test(args.password))
+
     except Exception as error_msg:
         __show_error(error_msg.args[-1])
