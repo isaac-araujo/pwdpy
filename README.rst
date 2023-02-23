@@ -20,6 +20,9 @@ Overall synopsis is:
 
     $ pwdpy {generate, test} [-h] [-l LENGTH] [-q QUANTITY] [-p] [-d] [-le] [-nu] [-nl] [-cf FILE]
 
+Commands:
+    **generate**      Generates a random password based on the arguments
+
 Arguments:
 
 -h, --help
