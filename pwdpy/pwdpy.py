@@ -1,5 +1,5 @@
 import string
-import random
+import secrets
 
 
 class Charset:
@@ -40,7 +40,7 @@ class Password:
         self.password = []
         for _ in range(self.length):
             self.password.append(self.__generate_char())
-        random.shuffle(self.password)
+        # secrets.shuffle(self.password)
 
         self.reset_charset()
         return "".join(self.password)
@@ -52,22 +52,22 @@ class Password:
                 self.minimum_achieved = True
                 return self.__generate_char()
 
-            charset = random.choice(pool)
+            charset = secrets.choice(pool)
             charset.count += 1
 
         elif len(self.charsets) > 1:
             # guarantees that will not select the same charset twice in a roll
             pool = [cs for cs in self.charsets if not cs.timeout]
-            charset = random.choice(pool)
+            charset = secrets.choice(pool)
             self.reset_charset()
             charset.timeout = True
 
         else:
             charset = self.charsets[0]
 
-        if (char := random.choice(charset.charset)) in self.password:
+        if (char := secrets.choice(charset.charset)) in self.password:
             # choice again if char alredy in the password
-            char = random.choice(charset.charset)
+            char = secrets.choice(charset.charset)
         return char
 
 
@@ -83,7 +83,7 @@ def generate(
     charset_file="",
     **kwargs,
 ) -> (str | list):
-    """Generates a random password based on the arguments.
+    """Generates a secrets password based on the arguments.
 
     Args:
         quantity (int, optional): Quantity of passwords to be generate.
