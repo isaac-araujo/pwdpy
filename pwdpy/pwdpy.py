@@ -159,7 +159,7 @@ def __show_error(msg=""):
 
 if __name__ == "__main__":
     import sys
-    import cli_args
+    from . import cli_args
 
     args = cli_args.get_args()
     try:
