@@ -83,7 +83,7 @@ def generate(
     charsets=[],
     charset_file="",
     **kwargs,
-) -> (str | list):
+):
     """Generates a secrets password based on the arguments.
 
     Args:
