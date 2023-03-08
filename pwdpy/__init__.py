@@ -1,1 +1,3 @@
-from .pwdpy import generate
+from .pwdpy import (
+    generate,
+)

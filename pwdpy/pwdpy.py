@@ -1,6 +1,9 @@
-import sys
-import string
 import secrets
+import string
+import sys
+
+from .cli_args import ArgParser
+from .contants import *
 
 
 class Charset:
@@ -82,6 +85,7 @@ def generate(
     l_lower=True,
     charsets=[],
     charset_file="",
+    output_file="",
     **kwargs,
 ):
     """Generates a secrets password based on the arguments.
@@ -97,6 +101,7 @@ def generate(
         l_lower (bool, optional): Whether to use lowercase letters or not. Defaults to True.
         charsets (list, optional): The charsets that will be used instead of the arguments specification. Defaults to [].
         charset_file (str, optional): The charset file will be used instead of the arguments specification. Defaults to "".
+        output_file (str, optional): The output file will be created with the passwords.
 
     Returns:
         str | list: return a list if the quantity is greater than 1
@@ -145,21 +150,34 @@ def generate(
         password_list = []
         for _ in range(quantity):
             password_list.append(password_gen.generate_password())
-        return password_list
+        ret = password_list
+    else:
+        ret = password_gen.generate_password()
 
-    return password_gen.generate_password()
+    if output_file:
+        __export_passwords(output_file, ret)
+    else:
+        return ret
 
 
-def test(password: str) -> str:
+def __export_passwords(output_file, passwords):
+    with open(output_file, "w") as file:
+        if isinstance(passwords, str):
+            passwords = [passwords]
+        for pwd in passwords[:-1]:
+            file.writelines(pwd + "\n")
+        file.writelines(pwd)
+
+
+def entropy(password: str) -> str:
     ...
 
 
 def main():
-    from . import cli_args
 
-    args = cli_args.get_args()
+    args = ArgParser.get_args()
     try:
-        if args.command in cli_args.GENERATE:
+        if args.command in GENERATE:
             print(
                 generate(
                     args.quantity,
@@ -170,9 +188,10 @@ def main():
                     l_upper=args.upper,
                     l_lower=args.lower,
                     charset_file=args.charset_file,
+                    output_file=args.output,
                 )
             )
-        elif args.command in cli_args.TEST:
+        elif args.command in TEST:
             print(test(args.password))
 
     except Exception as error_msg:
