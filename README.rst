@@ -18,7 +18,7 @@ Usage (command line)
 pwdpy accepts several arguments configuring its outcome.
 Overall synopsis is:
 
-    $ pwdpy {generate, test} [-h] [-l LENGTH] [-q QUANTITY] [-p] [-d] [-le] [-nu] [-nl] [-cf FILE]
+    $ pwdpy {generate, entr} [-h] [-l LENGTH] [-q QUANTITY] [-p] [-d] [-le] [-nu] [-nl] [-cf FILE]
 
 Commands:
     **generate**      Generates a random password based on the arguments
