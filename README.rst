@@ -18,7 +18,7 @@ Usage (command line)
 pwdpy accepts several arguments configuring its outcome.
 Overall synopsis is:
 
-    $ pwdpy {generate, entr} [-h] [-l LENGTH] [-q QUANTITY] [-p] [-d] [-le] [-nu] [-nl] [-cf FILE]
+    $ pwdpy {generate, entropy} [-h] [-l LENGTH] [-q QUANTITY] [-p] [-d] [-le] [-nu] [-nl] [-cf FILE] [-o FILE]
 
 Commands:
     **generate**      Generates a random password based on the arguments
@@ -51,6 +51,9 @@ Arguments:
 
 -cf, --charset-file FILE
     Charset file will be used instead of the arguments specification
+    
+-o FILE, --output FILE
+    The output file will be created with the passwords.
 
 Examples
 --------
