@@ -22,8 +22,10 @@ Overall synopsis is:
 
 Commands:
     **generate**      Generates a random password based on the arguments
+    
+    **entropy**       Calculate the entropy of a password
 
-Arguments:
+GENERATE Arguments:
 
 -h, --help
     Display help message
@@ -55,11 +57,18 @@ Arguments:
 -o FILE, --output FILE
     The output file will be created with the passwords.
 
+ENTROPY Arguments:
+
+-pwd, --password PASSWORD 
+    password that will be tested
+
 Examples
 --------
 
 Below are some examples of pwdpy usage.
 
+GENERATE:
+-------
 One password with letters and digits:
 
     $ pwdpy generate -le -d 
@@ -84,6 +93,13 @@ One password with all characters possibility from the charset file:
 
     $ pwdpy generate -cf ./wordlist.txt
         }=W8jb4y
+
+ENTROPY:
+-------
+Calculing one password entropy:
+
+    $ pwdpy entropy -pwd "PY>8OH+y"
+        52.44
 
 Python module
 =============
