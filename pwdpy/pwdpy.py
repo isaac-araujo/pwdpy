@@ -1,7 +1,8 @@
+import math
 import secrets
-import string
 import sys
 
+from . import strings
 from .cli_args import ArgParser
 from .contants import *
 
@@ -138,14 +139,14 @@ def generate(
 
     else:
         if punctuation:
-            password_gen.add_charset(Charset(string.punctuation, length))
+            password_gen.add_charset(Charset(strings.punctuation, length))
         if digits:
-            password_gen.add_charset(Charset(string.digits, length))
+            password_gen.add_charset(Charset(strings.digits, length))
         if letters:
             if l_upper:
-                password_gen.add_charset(Charset(string.ascii_uppercase, length))
+                password_gen.add_charset(Charset(strings.ascii_uppercase, length))
             if l_lower:
-                password_gen.add_charset(Charset(string.ascii_lowercase, length))
+                password_gen.add_charset(Charset(strings.ascii_lowercase, length))
     if quantity > 1:
         password_list = []
         for _ in range(quantity):
@@ -155,12 +156,12 @@ def generate(
         ret = password_gen.generate_password()
 
     if output_file:
-        __export_passwords(output_file, ret)
+        _export_passwords(output_file, ret)
     else:
         return ret
 
 
-def __export_passwords(output_file, passwords):
+def _export_passwords(output_file, passwords):
     with open(output_file, "w") as file:
         if isinstance(passwords, str):
             passwords = [passwords]
@@ -169,8 +170,42 @@ def __export_passwords(output_file, passwords):
         file.writelines(pwd)
 
 
-def entropy(password: str) -> str:
-    ...
+def entropy(password: str) -> float:
+    if not isinstance(password, str):
+        raise TypeError("password must be a string")
+
+    lowercase = False
+    uppercase = False
+    digits = False
+    punctuation = False
+    ascii_extended = False
+
+    for letter in set(password):
+        if letter in strings.ascii_lowercase:
+            lowercase = True
+        elif letter in strings.ascii_uppercase:
+            uppercase = True
+        elif letter in strings.digits:
+            digits = True
+        elif letter in strings.punctuation:
+            punctuation = True
+        elif letter in strings.ascii_extended:
+            ascii_extended = True
+
+    pool_size = 0
+    if lowercase:
+        pool_size += len(strings.ascii_lowercase)
+    if uppercase:
+        pool_size += len(strings.ascii_uppercase)
+    if digits:
+        pool_size += len(strings.digits)
+    if punctuation:
+        pool_size += len(strings.punctuation)
+    if ascii_extended:
+        pool_size += len(strings.ascii_extended)
+
+    # Shannon
+    return round(len(password) * math.log(pool_size, 2), 2)
 
 
 def main():
@@ -191,8 +226,8 @@ def main():
                     output_file=args.output,
                 )
             )
-        elif args.command in TEST:
-            print(test(args.password))
+        elif args.command in ENTROPY:
+            print(entropy(args.password))
 
     except Exception as error_msg:
         __show_error(error_msg.args[-1])

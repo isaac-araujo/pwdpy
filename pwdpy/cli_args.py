@@ -91,9 +91,11 @@ class ArgParser:
             default="",
         )
 
-        test = subparser.add_parser("test", help="test the strength of the password")
+        entropy = subparser.add_parser(
+            "entropy", help="calculate the entropy of the password"
+        )
 
-        test.add_argument(
+        entropy.add_argument(
             "-pwd",
             "--password",
             help="password that will be tested",
