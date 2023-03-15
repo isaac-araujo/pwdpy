@@ -171,6 +171,17 @@ def _export_passwords(output_file, passwords):
 
 
 def entropy(password: str) -> float:
+    """Return the password entropy using Shannon formula
+
+    Args:
+        password (str): password to calculate
+
+    Raises:
+        TypeError: password must be a string
+
+    Returns:
+        float: calculated entropy
+    """
     if not isinstance(password, str):
         raise TypeError("password must be a string")
 
