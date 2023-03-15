@@ -2,10 +2,13 @@ import pwdpy
 
 
 def test_generate():
-    passwords = pwdpy.generate(
+    try:
+        passwords = pwdpy.generate(
         quantity=10, length=16, punctuation=True, digits=True, letters=True
     )
-
+    except Exception:
+        assert False, "error on generate method"
+    
     assert len(passwords) == 10, "wrong amount of passwords"
     for pwd in passwords:
         p = False
