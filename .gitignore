@@ -132,7 +132,7 @@ dmypy.json
 .vscode/
 
 # Test files
-tests/
+# tests/
 test.py
 
 # Batch files
