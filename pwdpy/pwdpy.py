@@ -274,7 +274,7 @@ def strengthen(
             stronger_password = stronger_password + password.generate_password()
 
     if shuffle:
-        return random.shuffle(stronger_password)
+        return "".join(random.sample(stronger_password, len(stronger_password)))
 
     return stronger_password
 
