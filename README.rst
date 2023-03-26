@@ -18,14 +18,22 @@ Usage (command line)
 pwdpy accepts several arguments configuring its outcome.
 Overall synopsis is:
 
-    $ pwdpy {generate, entropy} [-h] [-l LENGTH] [-q QUANTITY] [-p] [-d] [-le] [-nu] [-nl] [-cf FILE] [-o FILE]
+    $ pwdpy {generate, entropy, strengthen} [-h]
+    
+    $ pwdpy generate [-h] [-l LENGTH] [-q QUANTITY] [-p] [-d] [-le] [-nu] [-nl] [-cf FILE] [-o FILE]
+    
+    $ pwdpy entropy [-h] [-pwd PASSWORD]
+    
+    $ pwdpy strengthen [-h] [-pwd PASSWORD] [-shf] [-inc] [-mp MAX_PREFIX] [-ms MAX_SUFIX]
 
 Commands:
     **generate**      Generates a random password based on the arguments
     
     **entropy**       Calculate the entropy of a password
+    
+    **strengthen**    Strengthen your password
 
-GENERATE Arguments:
+ALL Arguments:
 
 -h, --help
     Display help message
@@ -61,6 +69,23 @@ ENTROPY Arguments:
 
 -pwd, --password PASSWORD 
     password that will be tested
+
+STRENGTHEN Arguments:
+
+-pwd, --password PASSWORD 
+    password that will be strengthened
+    
+-shf, --shuffle
+    shuffle the password after strengthened (default: False)
+    
+-inc, --increase
+    increase the number of characters in the password (default: False)
+    
+-mp, --max_prefix MAX_PREFIX
+    max number of characters to add as prefix (default: 5) can only be used with --increase
+    
+-ms, --max_sufix MAX_SUFIX
+    max number of characters to add as sufix (default: 5) can only be used with --increase
 
 Examples
 --------
@@ -100,17 +125,36 @@ Calculing one password entropy:
 
     $ pwdpy entropy -pwd "PY>8OH+y"
         52.44
+    
+    $ pwdpy entropy -pwd "Isaac"
+        28.5
 
 Python module
 =============
 
 pwdpy Python module provides one function that is called generate.
 
-| ``def generate(quantity=1, length=8, punctuation=True, digits=True, letters=True, l_upper=True, l_lower=True, charset=[], charset_file="", **kwargs)``
+| ``generate(quantity=1, length=12, punctuation=True, digits=True, letters=True, l_upper=True, l_lower=True, charset=[], charset_file="", **kwargs)``
 
-It returns a string with *length* characters. *punctuation*, *digits*
-and *letters* arguments specify whether punctuation, digits and letters
-should be used. *l_upper* and *l_lower* specifies letter wich case the letter can be.
+    It returns a string with *length* characters. *punctuation*, *digits*
+    and *letters* arguments specify whether punctuation, digits and letters
+    should be used. *l_upper* and *l_lower* specifies letter wich case the letter can be.
+    
+    A list of charsets can be passed, instead of using the default it will uses the parameter.
+    
+    You can configure an output using *charset_file*, that file will be
+    created or replaced with the generated passwords
+    
+    
+| ``entropy(password: str) -> float``
+
+    It returns a float of bits that was the result of applying the Shannon formula.
+
+| ``strengthen(password: str, shuffle=False, increase=True, max_prefix=5, max_sufix=5) -> str``
+
+    It returns a string the strengthen password,
+    can be added a prefix and/or sufix by using *max_prefix* and *max_sufix*
+    and the password can be shuffle using *shuffle*.
 
 
 License
