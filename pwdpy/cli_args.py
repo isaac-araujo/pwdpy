@@ -11,6 +11,7 @@ class ArgParser:
             title="commands", help="list of tools that can be used", dest="command"
         )
 
+        # GENERATE
         generate = subparser.add_parser(
             "generate", help="generates a random password based on the arguments"
         )
@@ -91,6 +92,7 @@ class ArgParser:
             default="",
         )
 
+        # ENTROPY
         entropy = subparser.add_parser(
             "entropy", help="calculate the entropy of the password"
         )
@@ -102,6 +104,57 @@ class ArgParser:
             type=str,
             required=True,
             dest="password",
+        )
+
+        # STRENGTHEN
+        strengthen = subparser.add_parser(
+            "strengthen",
+            help="strengthen your password"
+        )
+
+        strengthen.add_argument(
+            "-pwd",
+            "--password",
+            help="password that will be strengthened",
+            type=str,
+            required=True,
+            dest="password",
+        )
+
+        strengthen.add_argument(
+            "-shf",
+            "--shuffle",
+            help="shuffle the password after strengthened (default: False)",
+            action="store_true",
+            default=False,
+        )
+
+        strengthen.add_argument(
+            "-inc",
+            "--increase",
+            help="increase the number of characters in the password (default: False)",
+            action="store_true",
+            default=False,
+        )
+
+        strengthen.add_argument(
+            "-mp",
+            "--max_prefix",
+            help=(
+                "max number of characters to add as prefix (default: 5) can only be used with --increase"
+            ),
+            type=int,
+            default=5,
+        )
+
+        strengthen.add_argument(
+            "-ms",
+            "--max_sufix",
+            help=(
+                "max number of characters to add as sufix (default: 5) can only be used with --increase"
+            ),
+            type=int,
+            default=5,
         )
 
         return parser.parse_args()

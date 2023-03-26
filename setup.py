@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-VERSION = "0.3.1"
+VERSION = "0.4.0"
 DESCRIPTION = "Password Tools"
 
 with open("README.rst") as file:

@@ -1,16 +1,18 @@
 import math
 import secrets
-import sys
+import random
+from colorama import init
+from click import style
 
-from . import strings
+from .strings import strings
 from .cli_args import ArgParser
 from .contants import *
 
 
 class Charset:
-    def __init__(self, charset, max, min=1):
+    def __init__(self, charset, min=1):
         self.charset = charset
-        self.max = max
+        # self.max = max
         self.min = min
         self.count = 0
         self._min_ok = False
@@ -27,14 +29,20 @@ class Charset:
 
 
 class Password:
-    def __init__(self, length):
+    def __init__(self, length=0):
         self.length = length
         self.charsets = []
         self.minimum_achieved = False
         self.password = []
 
-    def add_charset(self, charset):
+    def add_charset(self, charset: Charset):
         self.charsets.append(charset)
+
+    def add_all_charsets(self):
+        self.add_charset(Charset(strings.punctuation))
+        self.add_charset(Charset(strings.digits))
+        self.add_charset(Charset(strings.ascii_uppercase))
+        self.add_charset(Charset(strings.ascii_lowercase))
 
     def reset_charset(self):
         for charset in self.charsets:
@@ -45,7 +53,6 @@ class Password:
         self.password = []
         for _ in range(self.length):
             self.password.append(self.__generate_char())
-        # secrets.shuffle(self.password)
 
         self.reset_charset()
         return "".join(self.password)
@@ -78,7 +85,7 @@ class Password:
 
 def generate(
     quantity=1,
-    length=8,
+    length=12,
     punctuation=True,
     digits=True,
     letters=True,
@@ -131,22 +138,22 @@ def generate(
 
     if charsets:
         for cs in charsets:
-            password_gen.add_charset(Charset(cs, length))
+            password_gen.add_charset(Charset(cs))
 
     elif charset_file:
         with open(charset_file, encoding=encoding) as file:
-            password_gen.add_charset(Charset(file.read(), length))
+            password_gen.add_charset(Charset(file.read()))
 
     else:
         if punctuation:
-            password_gen.add_charset(Charset(strings.punctuation, length))
+            password_gen.add_charset(Charset(strings.punctuation))
         if digits:
-            password_gen.add_charset(Charset(strings.digits, length))
+            password_gen.add_charset(Charset(strings.digits))
         if letters:
             if l_upper:
-                password_gen.add_charset(Charset(strings.ascii_uppercase, length))
+                password_gen.add_charset(Charset(strings.ascii_uppercase))
             if l_lower:
-                password_gen.add_charset(Charset(strings.ascii_lowercase, length))
+                password_gen.add_charset(Charset(strings.ascii_lowercase))
     if quantity > 1:
         password_list = []
         for _ in range(quantity):
@@ -156,18 +163,18 @@ def generate(
         ret = password_gen.generate_password()
 
     if output_file:
-        _export_passwords(output_file, ret)
-    else:
-        return ret
+        ret = __export_passwords(output_file, ret)
+
+    return ret
 
 
-def _export_passwords(output_file, passwords):
+def __export_passwords(output_file, passwords):
     with open(output_file, "w") as file:
         if isinstance(passwords, str):
             passwords = [passwords]
-        for pwd in passwords[:-1]:
+        for pwd in passwords:
             file.writelines(pwd + "\n")
-        file.writelines(pwd)
+        return True
 
 
 def entropy(password: str) -> float:
@@ -215,37 +222,118 @@ def entropy(password: str) -> float:
     if ascii_extended:
         pool_size += len(strings.ascii_extended)
 
-    # Shannon
+    # Shannon formula
     return round(len(password) * math.log(pool_size, 2), 2)
+
+
+def strengthen(
+    password: str, shuffle=False, increase=True, max_prefix=5, max_sufix=5
+) -> str:
+    """Fortify the password using related characters
+
+    Args:
+        password (str): Password
+        increase (bool, optional): Whether the password length will increase or continue the same. Defaults to True.
+        shuffle (bool, optional): Shuffle password after strengthen. Defaults to False.
+        max_prefix (int, optional): Shuffle password after strengthen. Defaults to False.
+        max_sufix (int, optional): Shuffle password after strengthen. Defaults to False.
+
+    Raises:
+        TypeError: Password must be a string
+
+    Returns:
+        str: Strengthened password
+    """
+
+    if not isinstance(password, str):
+        raise TypeError("password must be a string")
+    if not isinstance(max_prefix, int):
+        raise TypeError("max_prefix must be an integer")
+    if not isinstance(max_sufix, int):
+        raise TypeError("max_sufix must be an integer")
+
+    stronger_password = ""
+
+    for char in password:
+        if (rand_char := __find_related(char)) in stronger_password:
+            rand_char = __find_related(char)
+        stronger_password += rand_char
+
+    if increase:
+        password = Password()
+        password.add_all_charsets()
+
+        if max_prefix > 0:
+            # adding prefix
+            password.length = random.randint(1, max_prefix)
+            stronger_password = password.generate_password() + stronger_password
+
+        if max_sufix > 0:
+            # adding suffix
+            password.length = random.randint(1, max_sufix)
+            stronger_password = stronger_password + password.generate_password()
+
+    if shuffle:
+        return random.shuffle(stronger_password)
+
+    return stronger_password
+
+
+def __find_related(char):
+    for pool in strings.related:
+        if char == pool[0] or char == pool[1]:
+            return secrets.choice(pool)
+    return char
 
 
 def main():
 
     args = ArgParser.get_args()
     try:
+        init(convert=True)
         if args.command in GENERATE:
+            result = generate(
+                args.quantity,
+                length=args.length,
+                punctuation=args.punctuation,
+                digits=args.digits,
+                letters=args.letters,
+                l_upper=args.upper,
+                l_lower=args.lower,
+                charset_file=args.charset_file,
+                output_file=args.output,
+            )
+            if args.output:
+                if result:
+
+                    print(
+                        style(f"Successfully Created:", fg="blue", bold=True),
+                        f"{args.output}",
+                    )
+
+        elif args.command in ENTROPY:
+            print(entropy(password=args.password))
+
+        elif args.command in STRENGTHEN:
             print(
-                generate(
-                    args.quantity,
-                    length=args.length,
-                    punctuation=args.punctuation,
-                    digits=args.digits,
-                    letters=args.letters,
-                    l_upper=args.upper,
-                    l_lower=args.lower,
-                    charset_file=args.charset_file,
-                    output_file=args.output,
+                strengthen(
+                    password=args.password,
+                    increase=args.increase,
+                    shuffle=args.shuffle,
+                    max_prefix=args.max_prefix,
+                    max_sufix=args.max_sufix,
                 )
             )
-        elif args.command in ENTROPY:
-            print(entropy(args.password))
 
     except Exception as error_msg:
         __show_error(error_msg.args[-1])
 
 
 def __show_error(msg=""):
-    print(f"pwdpy error: {msg}", file=sys.stderr)
+    print(
+        style(f"pwdpy error:", fg="red", bold=True),
+        f"{msg}",
+    )
 
 
 if __name__ == "__main__":

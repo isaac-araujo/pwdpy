@@ -1,6 +1,7 @@
 from .pwdpy import (
     generate,
-    entropy
+    entropy,
+    strengthen
 )
 
-from .strings import *
+from .strings import strings
