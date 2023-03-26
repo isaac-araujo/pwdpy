@@ -128,7 +128,21 @@ Calculing one password entropy:
     
     $ pwdpy entropy -pwd "Isaac"
         28.5
+        
+STRENGTHEN:
+-------
+Strengthen one password:
 
+    $ pwdpy strengthen -pwd "Isaac"
+        15Á4C
+    
+    $ pwdpy strengthen -pwd "Isaac" -inc
+        <uQ0@îsá4c~
+Strengthened and using shuffle
+
+    $ pwdpy strengthen -pwd "Python" -shf
+        ý%IÕqN
+        
 Python module
 =============
 
