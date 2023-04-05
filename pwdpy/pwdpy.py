@@ -1,12 +1,14 @@
 import math
-import secrets
 import random
-from colorama import init
-from click import style
+import secrets
+from typing import Union
 
-from .strings import strings
+from click import style
+from colorama import init
+
 from .cli_args import ArgParser
 from .contants import *
+from .strings import strings
 
 
 class Charset:
@@ -95,7 +97,7 @@ def generate(
     charset_file="",
     output_file="",
     **kwargs,
-):
+) -> Union(str, list):
     """Generates a secrets password based on the arguments.
 
     Args:
@@ -284,6 +286,82 @@ def __find_related(char):
         if char == pool[0] or char == pool[1]:
             return secrets.choice(pool)
     return char
+
+
+def generate_wordlist(
+    quantity=1,
+    length=8,
+    language="english",
+    sep=" ",
+    case="lower",
+    wordlist: str = None,
+) -> Union(str, list):
+    """_summary_
+
+    Args:
+        quantity (int, optional): Quantity of passwords to be generate.
+            If more than 1 return a list. Defaults to 1.
+        length (int, optional): Quantity of words in the password to be generate. Defaults to 8.
+        language (str, optional): Language of the wordlist to use. Defaults to "english".
+        sep (str, optional): Separator between words. Defaults to " ".
+        case (str, optional): Case that the words will be (lower, upper or title). Defaults to "lower".
+        wordlist (str, optional): The path to to the wordlist file. Defaults to None.
+
+    Raises:
+        ValueError: Quantity must be greater than zero
+        ValueError: Length must be greater than zero
+        ValueError: Case must be lower or upper or title
+        ValueError: Invalid language
+
+    Returns:
+        str | list: if quantity is greater than one return list
+    """
+
+    if quantity < 1:
+        raise ValueError("quantity must be greater than zero")
+    if length < 1:
+        raise ValueError("length must be greater than zero")
+    if case not in ["lower", "upper", "title"]:
+        raise ValueError("case must be lower or upper or title")
+
+    try:
+        if wordlist:
+            path = wordlist
+        else:
+            path = f"languages/{language}.txt"
+
+        file = open(path, "r", encoding="utf-8")
+
+    except FileNotFoundError:
+        raise ValueError("invalid language")
+
+    words = file.readlines()
+    password_list = []
+    sep = str(sep)
+    for _ in range(quantity):
+        password = ""
+        for _ in range(length):
+            word = secrets.choice(words)
+            password += f"{__aplly_case(word.strip(), case)}{sep}"
+        password_list.append(password.rstrip(sep))
+
+    file.close()
+
+    if len(password_list) == 1:
+        return password_list[0]
+    else:
+        return password_list
+
+
+def __aplly_case(word, case) -> str:
+    if case == "lower":
+        return word.lower()
+    if case == "upper":
+        return word.upper()
+    if case == "title":
+        return word.title()
+
+    return word
 
 
 def main():

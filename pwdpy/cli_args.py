@@ -107,10 +107,7 @@ class ArgParser:
         )
 
         # STRENGTHEN
-        strengthen = subparser.add_parser(
-            "strengthen",
-            help="strengthen your password"
-        )
+        strengthen = subparser.add_parser("strengthen", help="strengthen your password")
 
         strengthen.add_argument(
             "-pwd",

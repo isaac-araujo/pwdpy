@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 VERSION = "0.4.0"
 DESCRIPTION = "Password Tools"
 
-with open("README.rst", encoding='utf-8') as file:
+with open("README.rst", encoding="utf-8") as file:
     long_description = file.read()
 
 # Setting up

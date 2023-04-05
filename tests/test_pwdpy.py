@@ -50,3 +50,7 @@ def test_strengthen():
         assert (
             entropy_stronger > entropy_normal
         ), f"normal = {password} | stronger = {stronger_password}"
+
+# TODO: implement test
+def test_generate_wordlist():
+    password = pwdpy.generate_wordlist(quantity=20, language="portuguese", case="upper")
