@@ -1,6 +1,9 @@
 import math
 import random
 import secrets
+import random
+import sys
+from typing import Union, List
 from typing import Union
 
 from click import style
@@ -14,16 +17,10 @@ from .strings import strings
 class Charset:
     def __init__(self, charset, min=1):
         self.charset = charset
-        # self.max = max
         self.min = min
         self.count = 0
         self._min_ok = False
-        self.timeout = False
-        # self._max_ok = False
-
-    # @property
-    # def max_ok(self):
-    #     return self.count >= self.max
+        self._timeout = False
 
     @property
     def min_ok(self):
@@ -31,11 +28,88 @@ class Charset:
 
 
 class Password:
-    def __init__(self, length=0):
-        self.length = length
+    def __init__(self):
         self.charsets = []
         self.minimum_achieved = False
-        self.password = []
+        self.password = ""
+
+    def generate(
+        self,
+        quantity=1,
+        length=12,
+        punctuation=True,
+        digits=True,
+        letters=True,
+        l_upper=True,
+        l_lower=True,
+        charsets=[],
+        charset_file="",
+        output_file="",
+        enconding_file="utf-8"
+    ) -> Union[str, List[str]]:
+        """Generates a secrets password based on the arguments.
+
+        Args:
+            quantity (int, optional): Quantity of passwords to be generate.
+                If more than 1 return a list. Defaults to 1.
+            length (int, optional): Password length. Defaults to 8.
+            punctuation (bool, optional): Whether to use punctuation or not. Defaults to True.
+            digits (bool, optional): Whether to use digits or not. Defaults to True.
+            letters (bool, optional): Whether to use letters or not. Defaults to True.
+            l_upper (bool, optional): Whether to use uppercase letters or not. Defaults to True.
+            l_lower (bool, optional): Whether to use lowercase letters or not. Defaults to True.
+            charsets (list, optional): The charsets that will be used instead of the arguments specification. Defaults to [].
+            charset_file (str, optional): The charset file will be used instead of the arguments specification. Defaults to "".
+            output_file (str, optional): The output file will be created with the passwords.
+
+        Returns:
+            str | list: return a list if the quantity is greater than 1
+
+        """
+
+        if quantity < 1:
+            raise ValueError("quantity must be greater than zero")
+        if length < 1:
+            raise ValueError("length must be greater than zero")
+        if not punctuation and not digits and not letters and not charsets and not charset_file:
+            raise ValueError(
+                "at least one of this argument must exists(punctuation, digits, letters, charset, charset_file)"
+            )
+        if not isinstance(charsets, list):
+            raise ValueError("charset must be a list")
+
+        self.length = length
+
+        if charsets:
+            for cs in charsets:
+                self.add_charset(Charset(cs))
+
+        elif charset_file:
+            with open(charset_file, encoding=enconding_file) as file:
+                self.add_charset(Charset(file.read()))
+
+        else:
+            if punctuation:
+                self.add_charset(Charset(strings.punctuation))
+            if digits:
+                self.add_charset(Charset(strings.digits))
+            if letters:
+                if l_upper:
+                    self.add_charset(Charset(strings.ascii_uppercase))
+                if l_lower:
+                    self.add_charset(Charset(strings.ascii_lowercase))
+        if quantity > 1:
+            password_list = []
+            for _ in range(quantity):
+                password_list.append(self._generate_password())
+            ret = password_list
+        else:
+            ret = self._generate_password()
+
+        if output_file:
+            ret = _export_passwords(output_file, ret)
+
+        return ret
 
     def add_charset(self, charset: Charset):
         self.charsets.append(charset)
@@ -49,32 +123,32 @@ class Password:
     def reset_charset(self):
         for charset in self.charsets:
             charset.count = 0
-            charset.timeout = False
+            charset._timeout = False
 
-    def generate_password(self):
-        self.password = []
+    def _generate_password(self):
+        password = []
         for _ in range(self.length):
-            self.password.append(self.__generate_char())
+            password.append(self._generate_char())
 
         self.reset_charset()
-        return "".join(self.password)
+        return "".join(password)
 
-    def __generate_char(self):
+    def _generate_char(self):
         if not self.minimum_achieved:
             pool = [cs for cs in self.charsets if not cs.min_ok]
             if not pool:
                 self.minimum_achieved = True
-                return self.__generate_char()
+                return self._generate_char()
 
             charset = secrets.choice(pool)
             charset.count += 1
 
         elif len(self.charsets) > 1:
             # guarantees that will not select the same charset twice in a roll
-            pool = [cs for cs in self.charsets if not cs.timeout]
+            pool = [cs for cs in self.charsets if not cs._timeout]
             charset = secrets.choice(pool)
             self.reset_charset()
-            charset.timeout = True
+            charset._timeout = True
 
         else:
             charset = self.charsets[0]
@@ -83,6 +157,14 @@ class Password:
             # choice again if char alredy in the password
             char = secrets.choice(charset.charset)
         return char
+
+def _export_passwords(output_file, passwords):
+    with open(output_file, "w") as file:
+        if isinstance(passwords, str):
+            passwords = [passwords]
+        for pwd in passwords:
+            file.writelines(pwd + "\n")
+        return True
 
 
 def generate(
@@ -117,66 +199,8 @@ def generate(
         str | list: return a list if the quantity is greater than 1
 
     """
-
-    if quantity < 1:
-        raise ValueError("quantity must be greater than zero")
-    if length < 1:
-        raise ValueError("length must be greater than zero")
-    if (
-        not punctuation
-        and not digits
-        and not letters
-        and not charsets
-        and not charset_file
-    ):
-        raise ValueError(
-            "at least one of this argument must exists(punctuation, digits, letters, charset, charset_file)"
-        )
-    if not isinstance(charsets, list):
-        raise ValueError("charset must be a list")
-
-    encoding = kwargs.get("encoding", "utf-8")
-    password_gen = Password(length)
-
-    if charsets:
-        for cs in charsets:
-            password_gen.add_charset(Charset(cs))
-
-    elif charset_file:
-        with open(charset_file, encoding=encoding) as file:
-            password_gen.add_charset(Charset(file.read()))
-
-    else:
-        if punctuation:
-            password_gen.add_charset(Charset(strings.punctuation))
-        if digits:
-            password_gen.add_charset(Charset(strings.digits))
-        if letters:
-            if l_upper:
-                password_gen.add_charset(Charset(strings.ascii_uppercase))
-            if l_lower:
-                password_gen.add_charset(Charset(strings.ascii_lowercase))
-    if quantity > 1:
-        password_list = []
-        for _ in range(quantity):
-            password_list.append(password_gen.generate_password())
-        ret = password_list
-    else:
-        ret = password_gen.generate_password()
-
-    if output_file:
-        ret = __export_passwords(output_file, ret)
-
-    return ret
-
-
-def __export_passwords(output_file, passwords):
-    with open(output_file, "w") as file:
-        if isinstance(passwords, str):
-            passwords = [passwords]
-        for pwd in passwords:
-            file.writelines(pwd + "\n")
-        return True
+    password = Password()
+    return password.generate(**kwargs)
 
 
 def entropy(password: str) -> float:
@@ -228,9 +252,7 @@ def entropy(password: str) -> float:
     return round(len(password) * math.log(pool_size, 2), 2)
 
 
-def strengthen(
-    password: str, shuffle=False, increase=True, max_prefix=5, max_sufix=5
-) -> str:
+def strengthen(password: str, shuffle=False, increase=True, max_prefix=5, max_sufix=5) -> str:
     """Fortify the password using related characters
 
     Args:
@@ -257,8 +279,8 @@ def strengthen(
     stronger_password = ""
 
     for char in password:
-        if (rand_char := __find_related(char)) in stronger_password:
-            rand_char = __find_related(char)
+        if (rand_char := _find_related(char)) in stronger_password:
+            rand_char = _find_related(char)
         stronger_password += rand_char
 
     if increase:
@@ -268,12 +290,12 @@ def strengthen(
         if max_prefix > 0:
             # adding prefix
             password.length = random.randint(1, max_prefix)
-            stronger_password = password.generate_password() + stronger_password
+            stronger_password = password._generate_password() + stronger_password
 
         if max_sufix > 0:
             # adding suffix
             password.length = random.randint(1, max_sufix)
-            stronger_password = stronger_password + password.generate_password()
+            stronger_password = stronger_password + password._generate_password()
 
     if shuffle:
         return "".join(random.sample(stronger_password, len(stronger_password)))
@@ -281,7 +303,7 @@ def strengthen(
     return stronger_password
 
 
-def __find_related(char):
+def _find_related(char):
     for pool in strings.related:
         if char == pool[0] or char == pool[1]:
             return secrets.choice(pool)
@@ -365,10 +387,8 @@ def __aplly_case(word, case) -> str:
 
 
 def main():
-
     args = ArgParser.get_args()
     try:
-        init(convert=True)
         if args.command in GENERATE:
             result = generate(
                 args.quantity,
@@ -381,13 +401,12 @@ def main():
                 charset_file=args.charset_file,
                 output_file=args.output,
             )
-            if args.output:
-                if result:
-
-                    print(
-                        style(f"Successfully Created:", fg="blue", bold=True),
-                        f"{args.output}",
-                    )
+            if result:
+                if args.output:
+                    print(f"Successfully Created: {args.output}")
+                else:
+                    print(result)
+                
 
         elif args.command in ENTROPY:
             print(entropy(password=args.password))
@@ -404,14 +423,11 @@ def main():
             )
 
     except Exception as error_msg:
-        __show_error(error_msg.args[-1])
+        _show_error(error_msg.args[-1])
 
 
-def __show_error(msg=""):
-    print(
-        style(f"pwdpy error:", fg="red", bold=True),
-        f"{msg}",
-    )
+def _show_error(msg=""):
+    print(f"pwdpy error: {msg}", file=sys.stderr)
 
 
 if __name__ == "__main__":
