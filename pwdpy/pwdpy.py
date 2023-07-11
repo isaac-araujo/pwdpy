@@ -394,7 +394,7 @@ def main():
     try:
         if args.command in GENERATE:
             result = generate(
-                args.quantity,
+                quantity=args.quantity,
                 length=args.length,
                 punctuation=args.punctuation,
                 digits=args.digits,
