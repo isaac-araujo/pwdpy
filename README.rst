@@ -44,8 +44,8 @@ ALL Arguments:
 -q, --quantity QUANTITY
     Generate QUANTITY passwords. (default: 1)
 
--p, --punctuation
-    Use punctuation characters (default: False)
+-sc, --special_characters
+    Use special characters (default: False)
 
 -d, --digits
     Use digits (default: False)
@@ -148,10 +148,10 @@ Python module
 
 pwdpy Python module provides one function that is called generate.
 
-| ``generate(quantity=1, length=12, punctuation=True, digits=True, letters=True, l_upper=True, l_lower=True, charset=[], charset_file="", **kwargs)``
+| ``generate(quantity=1, length=12, special_characters=True, digits=True, letters=True, l_upper=True, l_lower=True, charset=[], charset_file="", **kwargs)``
 
-    It returns a string with *length* characters. *punctuation*, *digits*
-    and *letters* arguments specify whether punctuation, digits and letters
+    It returns a string with *length* characters. *special_characters*, *digits*
+    and *letters* arguments specify whether special characters, digits and letters
     should be used. *l_upper* and *l_lower* specifies letter wich case the letter can be.
     
     A list of charsets can be passed, instead of using the default it will uses the parameter.
