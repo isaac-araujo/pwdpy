@@ -4,7 +4,7 @@ import pwdpy
 def test_generate():
     try:
         passwords = pwdpy.generate(
-            quantity=10, length=16, punctuation=True, digits=True, letters=True
+            quantity=10, length=16, special_characters=True, digits=True, letters=True
         )
     except Exception:
         assert False, "error on generate method"
@@ -20,13 +20,13 @@ def test_generate():
         for char in pwd:
             if char in pwdpy.strings.digits:
                 d = True
-            if char in pwdpy.strings.punctuation:
+            if char in pwdpy.strings.special_characters:
                 p = True
             if char in pwdpy.strings.ascii_letters:
                 l = True
 
         assert d == True, f"no digits in password: {pwd}"
-        assert p == True, f"no punctuation in password: {pwd}"
+        assert p == True, f"no special_characters in password: {pwd}"
         assert l == True, f"no ascii_letters in password: {pwd}"
 
 
@@ -53,7 +53,7 @@ def test_strengthen():
     # String Test
     for _ in range(10):
         password = pwdpy.generate(
-            length=12, punctuation=False, digits=True, letters=True
+            length=12, special_characters=False, digits=True, letters=True
         )
         stronger_password = pwdpy.strengthen(password, increase=True)
 

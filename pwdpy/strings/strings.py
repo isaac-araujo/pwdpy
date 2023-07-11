@@ -6,8 +6,8 @@ ascii_letters = ascii_lowercase + ascii_uppercase
 digits = "0123456789"
 hexdigits = digits + "abcdef" + "ABCDEF"
 octdigits = "01234567"
-punctuation = r"""!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~"""
-printable = digits + ascii_letters + punctuation + whitespace + ascii_extended
+special_characters = r"""!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~"""
+printable = digits + ascii_letters + special_characters + whitespace + ascii_extended
 pools = [whitespace, ascii_lowercase, ascii_uppercase, ascii_extended, digits]
 
 related_extended = [

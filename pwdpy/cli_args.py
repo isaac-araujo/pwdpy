@@ -33,9 +33,9 @@ class ArgParser:
         )
 
         generate.add_argument(
-            "-p",
-            "--punctuation",
-            help="use punctuation characters (default: False)",
+            "-sc",
+            "--special_characters",
+            help="use special characters (default: False)",
             action="store_true",
             default=False,
         )
@@ -49,11 +49,12 @@ class ArgParser:
         )
 
         generate.add_argument(
-            "-le",
-            "--letters",
-            help="use letter (default: False)",
-            action="store_true",
-            default=False,
+            "-nle",
+            "--no-letters",
+            help="don't use letters (default: False)",
+            action="store_false",
+            default=True,
+            dest="letters"
         )
 
         generate.add_argument(

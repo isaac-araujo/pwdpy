@@ -37,7 +37,7 @@ class Password:
         self,
         quantity=1,
         length=12,
-        punctuation=True,
+        special_characters=True,
         digits=True,
         letters=True,
         l_upper=True,
@@ -53,7 +53,7 @@ class Password:
             quantity (int, optional): Quantity of passwords to be generate.
                 If more than 1 return a list. Defaults to 1.
             length (int, optional): Password length. Defaults to 8.
-            punctuation (bool, optional): Whether to use punctuation or not. Defaults to True.
+            special_characters (bool, optional): Whether to use special_characters or not. Defaults to True.
             digits (bool, optional): Whether to use digits or not. Defaults to True.
             letters (bool, optional): Whether to use letters or not. Defaults to True.
             l_upper (bool, optional): Whether to use uppercase letters or not. Defaults to True.
@@ -71,9 +71,9 @@ class Password:
             raise ValueError("quantity must be greater than zero")
         if length < 1:
             raise ValueError("length must be greater than zero")
-        if not punctuation and not digits and not letters and not charsets and not charset_file:
+        if not special_characters and not digits and not letters and not charsets and not charset_file:
             raise ValueError(
-                "at least one of this argument must exists(punctuation, digits, letters, charset, charset_file)"
+                "at least one of this argument must exists(special_characters, digits, letters, charset, charset_file)"
             )
         if not isinstance(charsets, list):
             raise ValueError("charset must be a list")
@@ -89,8 +89,8 @@ class Password:
                 self.add_charset(Charset(file.read()))
 
         else:
-            if punctuation:
-                self.add_charset(Charset(strings.punctuation))
+            if special_characters:
+                self.add_charset(Charset(strings.special_characters))
             if digits:
                 self.add_charset(Charset(strings.digits))
             if letters:
@@ -115,7 +115,7 @@ class Password:
         self.charsets.append(charset)
 
     def add_all_charsets(self):
-        self.add_charset(Charset(strings.punctuation))
+        self.add_charset(Charset(strings.special_characters))
         self.add_charset(Charset(strings.digits))
         self.add_charset(Charset(strings.ascii_uppercase))
         self.add_charset(Charset(strings.ascii_lowercase))
@@ -186,7 +186,7 @@ def generate(
         quantity (int, optional): Quantity of passwords to be generate.
             If more than 1 return a list. Defaults to 1.
         length (int, optional): Password length. Defaults to 8.
-        punctuation (bool, optional): Whether to use punctuation or not. Defaults to True.
+        special_characters (bool, optional): Whether to use special_characters or not. Defaults to True.
         digits (bool, optional): Whether to use digits or not. Defaults to True.
         letters (bool, optional): Whether to use letters or not. Defaults to True.
         l_upper (bool, optional): Whether to use uppercase letters or not. Defaults to True.
@@ -221,7 +221,7 @@ def entropy(password: str) -> float:
     lowercase = False
     uppercase = False
     digits = False
-    punctuation = False
+    special_characters = False
     ascii_extended = False
 
     for letter in set(password):
@@ -231,8 +231,8 @@ def entropy(password: str) -> float:
             uppercase = True
         elif letter in strings.digits:
             digits = True
-        elif letter in strings.punctuation:
-            punctuation = True
+        elif letter in strings.special_characters:
+            special_characters = True
         elif letter in strings.ascii_extended:
             ascii_extended = True
 
@@ -243,8 +243,8 @@ def entropy(password: str) -> float:
         pool_size += len(strings.ascii_uppercase)
     if digits:
         pool_size += len(strings.digits)
-    if punctuation:
-        pool_size += len(strings.punctuation)
+    if special_characters:
+        pool_size += len(strings.special_characters)
     if ascii_extended:
         pool_size += len(strings.ascii_extended)
 
@@ -396,7 +396,7 @@ def main():
             result = generate(
                 quantity=args.quantity,
                 length=args.length,
-                punctuation=args.punctuation,
+                special_characters=args.special_characters,
                 digits=args.digits,
                 letters=args.letters,
                 l_upper=args.upper,
