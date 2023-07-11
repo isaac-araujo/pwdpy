@@ -36,6 +36,21 @@ def test_entropy():
 
 
 def test_strengthen():
+    # Integer Test
+    password = 98712365
+    stronger_password = pwdpy.strengthen(password, increase=True)
+    password = str(password)
+
+    assert len(stronger_password) > len(password), "lenght did not changed"
+
+    entropy_normal = pwdpy.entropy(password)
+    entropy_stronger = pwdpy.entropy(stronger_password)
+
+    assert (
+        entropy_stronger > entropy_normal
+    ), f"normal = {password} | stronger = {stronger_password}"
+    
+    # String Test
     for _ in range(10):
         password = pwdpy.generate(
             length=12, punctuation=False, digits=True, letters=True

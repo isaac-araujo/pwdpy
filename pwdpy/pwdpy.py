@@ -268,9 +268,12 @@ def strengthen(password: str, shuffle=False, increase=True, max_prefix=5, max_su
     Returns:
         str: Strengthened password
     """
-
     if not isinstance(password, str):
-        raise TypeError("password must be a string")
+        try:
+            password = str(password)
+        except Exception:
+            raise TypeError("invalid password format")
+        
     if not isinstance(max_prefix, int):
         raise TypeError("max_prefix must be an integer")
     if not isinstance(max_sufix, int):
