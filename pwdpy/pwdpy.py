@@ -45,7 +45,7 @@ class Password:
         charsets=[],
         charset_file="",
         output_file="",
-        enconding_file="utf-8"
+        enconding_file="utf-8",
     ) -> Union[str, List[str]]:
         """Generates a secrets password based on the arguments.
 
@@ -71,7 +71,13 @@ class Password:
             raise ValueError("quantity must be greater than zero")
         if length < 1:
             raise ValueError("length must be greater than zero")
-        if not special_characters and not digits and not letters and not charsets and not charset_file:
+        if (
+            not special_characters
+            and not digits
+            and not letters
+            and not charsets
+            and not charset_file
+        ):
             raise ValueError(
                 "at least one of this argument must exists(special_characters, digits, letters, charset, charset_file)"
             )
@@ -158,6 +164,7 @@ class Password:
             char = secrets.choice(charset.charset)
         return char
 
+
 def _export_passwords(output_file, passwords):
     with open(output_file, "w") as file:
         if isinstance(passwords, str):
@@ -170,7 +177,7 @@ def _export_passwords(output_file, passwords):
 def generate(
     quantity=1,
     length=12,
-    punctuation=True,
+    special_characters=True,
     digits=True,
     letters=True,
     l_upper=True,
@@ -200,7 +207,19 @@ def generate(
 
     """
     password = Password()
-    return password.generate(**kwargs)
+    return password.generate(
+        quantity,
+        length,
+        special_characters,
+        digits,
+        letters,
+        l_upper,
+        l_lower,
+        charsets,
+        charset_file,
+        output_file,
+        **kwargs,
+    )
 
 
 def entropy(password: str) -> float:
@@ -273,7 +292,7 @@ def strengthen(password: str, shuffle=False, increase=True, max_prefix=5, max_su
             password = str(password)
         except Exception:
             raise TypeError("invalid password format")
-        
+
     if not isinstance(max_prefix, int):
         raise TypeError("max_prefix must be an integer")
     if not isinstance(max_sufix, int):
@@ -367,7 +386,7 @@ def generate_wordlist(
         password = ""
         for _ in range(length):
             word = secrets.choice(words)
-            password += f"{__aplly_case(word.strip(), case)}{sep}"
+            password += f"{_aplly_case(word.strip(), case)}{sep}"
         password_list.append(password.rstrip(sep))
 
     file.close()
@@ -378,7 +397,7 @@ def generate_wordlist(
         return password_list
 
 
-def __aplly_case(word, case) -> str:
+def _aplly_case(word, case) -> str:
     if case == "lower":
         return word.lower()
     if case == "upper":
@@ -409,7 +428,6 @@ def main():
                     print(f"Successfully Created: {args.output}")
                 else:
                     print(result)
-                
 
         elif args.command in ENTROPY:
             print(entropy(password=args.password))
