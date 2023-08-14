@@ -97,7 +97,7 @@ def generate(
     charset_file="",
     output_file="",
     **kwargs,
-) -> Union(str, list):
+) -> Union[str, list]:
     """Generates a secrets password based on the arguments.
 
     Args:
@@ -295,7 +295,7 @@ def generate_wordlist(
     sep=" ",
     case="lower",
     wordlist: str = None,
-) -> Union(str, list):
+) -> Union[str, list]:
     """_summary_
 
     Args:

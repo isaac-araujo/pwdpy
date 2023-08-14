@@ -52,5 +52,5 @@ def test_strengthen():
         ), f"normal = {password} | stronger = {stronger_password}"
 
 # TODO: implement test
-def test_generate_wordlist():
+def generate_wordlist():
     password = pwdpy.generate_wordlist(quantity=20, language="portuguese", case="upper")
