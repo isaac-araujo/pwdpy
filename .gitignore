@@ -138,3 +138,6 @@ test.py
 # Batch files
 *.bat
 batch/
+
+# Pypi
+.pypirc

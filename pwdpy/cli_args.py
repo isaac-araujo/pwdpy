@@ -51,7 +51,7 @@ class ArgParser:
         generate.add_argument(
             "-nle",
             "--no-letters",
-            help="don't use letters (default: False)",
+            help="don't use letters (default: True)",
             action="store_false",
             default=True,
             dest="letters"
@@ -60,7 +60,7 @@ class ArgParser:
         generate.add_argument(
             "-nu",
             "--no-upper",
-            help="don't use upper case letters (default: False)",
+            help="don't use upper case letters (default: True)",
             action="store_false",
             default=True,
             dest="upper",
@@ -69,7 +69,7 @@ class ArgParser:
         generate.add_argument(
             "-nl",
             "--no-lower",
-            help="don't use lower case letters (default: False)",
+            help="don't use lower case letters (default: True)",
             action="store_false",
             default=True,
             dest="lower",
@@ -153,6 +153,62 @@ class ArgParser:
             ),
             type=int,
             default=5,
+        )
+
+        generate_wordlist = subparser.add_parser(
+            "generate_wordlist", help="generates wordlist based on the arguments"
+        )
+
+        generate_wordlist.add_argument(
+            "-q",
+            "--quantity",
+            help=(
+                "quantity of passwords to generate (default: 1)"
+            ),
+            type=int,
+            default=1,
+        )
+        
+        generate_wordlist.add_argument(
+            "-l",
+            "--length",
+            help="the length of the password (default: 8)",
+            type=int,
+            default=8,
+        )
+
+        generate_wordlist.add_argument(
+            "-lg",
+            "--language",
+            help="language of the words (default: english)",
+            type=str,
+            default="english",
+        )
+
+        generate_wordlist.add_argument(
+            "-sep",
+            "--separator",
+            help="word separation (default: space)",
+            type=str,
+            default=" ",
+            dest="sep",
+        )
+
+        generate_wordlist.add_argument(
+            "-u",
+            "--upper",
+            help="use upper case words (default: False)",
+            action="store_const",
+            const="upper",
+            default="lower",
+            dest="case",
+        )
+
+        generate_wordlist.add_argument(
+            "-wl",
+            "--wordlist",
+            help="path to to the wordlist file (default: None)",
+            default=None,
         )
 
         return parser.parse_args()

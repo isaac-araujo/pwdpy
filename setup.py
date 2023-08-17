@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-VERSION = "0.5.0"
+VERSION = "1.0.0"
 DESCRIPTION = "Password Tools"
 
 with open("README.rst", encoding="utf-8") as file:
@@ -25,9 +25,12 @@ setup(
     entry_points={"console_scripts": ["pwdpy = pwdpy.pwdpy:main"]},
     keywords=["python", "password", "password generator", "password tools"],
     classifiers=[
-        "Development Status :: 2 - Pre-Alpha",
+        "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
         "Programming Language :: Python :: 3.7",
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
         "Operating System :: Unix",
         "Operating System :: MacOS :: MacOS X",
         "Operating System :: Microsoft :: Windows",

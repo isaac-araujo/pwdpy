@@ -26,12 +26,16 @@ Overall synopsis is:
     
     $ pwdpy strengthen [-h] [-pwd PASSWORD] [-shf] [-inc] [-mp MAX_PREFIX] [-ms MAX_SUFIX]
 
+    $ pwdpy generate_wordlist [-h] [-q QUANTITY] [-l LENGTH] [-lg LANGUAGE] [-sep SEP] [-u] [-wl WORDLIST]
+
 Commands:
     **generate**      Generates a random password based on the arguments
     
     **entropy**       Calculate the entropy of a password
     
     **strengthen**    Strengthen your password
+
+    **generate_wordlist**    Generates a random wordlist
 
 ALL Arguments:
 
@@ -87,6 +91,26 @@ STRENGTHEN Arguments:
 -ms, --max_sufix MAX_SUFIX
     max number of characters to add as sufix (default: 5) can only be used with --increase
 
+GENERATE WORDLIST Arguments:
+
+-q QUANTITY, --quantity QUANTITY
+    quantity of passwords to generate (default: 1)
+                    
+-l LENGTH, --length LENGTH
+        the length of the password (default: 8)
+
+-lg LANGUAGE, --language LANGUAGE
+    language of the words (default: english)
+
+-sep SEP, --separator SEP
+    word separation (default: space)
+
+-u, --upper           
+    use upper case words (default: False)
+
+-wl WORDLIST, --wordlist WORDLIST
+    path to to the wordlist file (default: None)
+
 Examples
 --------
 
@@ -138,17 +162,30 @@ Strengthen one password:
     
     $ pwdpy strengthen -pwd "Isaac" -inc
         <uQ0@îsá4c~
+        
 Strengthened and using shuffle
 
     $ pwdpy strengthen -pwd "Python" -shf
         ý%IÕqN
+
+GENERATE WORDLIST:
+-------
+Generate one wordlist with 13 words:
+
+    $ pwdpy generate_wordlist -l 13
+        dollhood obligatum weirded triangularly meanness uncrediting ologies pomological refixture accessible clapperclaws winzeman montesinos
+
+Generate one wordlist with portuguese upper words:
+
+    $ generate_wordlist -lg portuguese -u
+        ANDRÔMEDA CUCURBITÁCEO ISOAMÍLICO APLACÁVEL ARQUEÔMETRO GERVAIS CRUSTACÍTICO EUGLIPTO
         
 Python module
 =============
 
 pwdpy Python module provides one function that is called generate.
 
-| ``generate(quantity=1, length=12, special_characters=True, digits=True, letters=True, l_upper=True, l_lower=True, charset=[], charset_file="", **kwargs)``
+| ``generate(quantity=1, length=12, special_characters=True, digits=True, letters=True, l_upper=True, l_lower=True, charset=[], charset_file="",output_file="", **kwargs) -> str or list``
 
     It returns a string with *length* characters. *special_characters*, *digits*
     and *letters* arguments specify whether special characters, digits and letters
@@ -164,12 +201,19 @@ pwdpy Python module provides one function that is called generate.
 
     It returns a float of bits that was the result of applying the Shannon formula.
 
+
 | ``strengthen(password: str, shuffle=False, increase=True, max_prefix=5, max_sufix=5) -> str``
 
     It returns a string the strengthen password,
     can be added a prefix and/or sufix by using *max_prefix* and *max_sufix*
     and the password can be shuffle using *shuffle*.
 
+| ``generate_wordlist(quantity=1, length=8, language="english", sep=" ", case="lower", wordlist: str = None) -> str orlist``
+    
+    It returns a string with *length* of words.
+    The words are select by *language* and separeted by *sep*.
+    Define case of the words using *case*.
+    Or you can pass your own wordlist using *wordlist*.
 
 License
 --------

@@ -1,13 +1,8 @@
 import math
 import random
 import secrets
-import random
 import sys
-from typing import Union, List
-from typing import Union
-
-from click import style
-from colorama import init
+from typing import List, Union
 
 from .cli_args import ArgParser
 from .contants import *
@@ -440,6 +435,18 @@ def main():
                     shuffle=args.shuffle,
                     max_prefix=args.max_prefix,
                     max_sufix=args.max_sufix,
+                )
+            )
+
+        elif args.command in WORDLIST:
+            print(
+                generate_wordlist(
+                    quantity=args.quantity,
+                    length=args.length,
+                    language=args.language,
+                    sep=args.sep,
+                    case=args.case,
+                    wordlist=args.wordlist,
                 )
             )
 
